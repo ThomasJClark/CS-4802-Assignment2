@@ -7,6 +7,8 @@ cluster =
   lowestDistance: 1/0
   highestDistance: 0
 
+  # bottomUpCluster()
+  #
   # Perform a bottom-up clustering algorithm by pairing up similar entries
   # two at a time until they form a binary tree.
   bottomUpCluster: (entries) ->
@@ -50,6 +52,8 @@ cluster =
   _distanceCache: {}
 
 
+  # distance()
+  #
   # Counts the number of properties of entry1 and entry2 that are not equal.
   # If an entry is actually a group, then the distance is the average distance
   # of all of its children.

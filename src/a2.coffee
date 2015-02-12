@@ -4,7 +4,7 @@
 
 treeData = undefined
 colorSpace = d3.interpolateRgb '#FF3341', '#FBD2D4'
-lineColor = '#B28F92'
+lineColor = '#CCB8BA'
 
 svg = (d3.select 'body').append 'svg:svg'
   .attr

@@ -23,6 +23,13 @@ cluster =
             entryIndex1 = j
             entryIndex2 = i
 
+          # Keep track of the range of distances between entries.  This is used
+          # to map distances to colors.
+          if distance > cluster.highestDistance
+            cluster.highestDistance = minNodeDistance
+          if distance < cluster.lowestDistance
+            cluster.lowestDistance = minNodeDistance
+
       # Remove the two entries and add them to a new group
       entry1 = (entries.splice entryIndex1, 1)[0]
       entry2 = (entries.splice entryIndex2, 1)[0]
@@ -31,11 +38,6 @@ cluster =
         group: true
         children: [entry1, entry2]
         distance: minNodeDistance
-
-      if minNodeDistance > cluster.highestDistance
-        cluster.highestDistance = minNodeDistance
-      if minNodeDistance < cluster.lowestDistance
-        cluster.lowestDistance = minNodeDistance
 
     # entries should be a binary tree now, so the first (and only) element
     # is the root.

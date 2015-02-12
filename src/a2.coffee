@@ -10,6 +10,7 @@ svg = (d3.select 'body').append 'svg:svg'
   .style
     display: 'block'
     margin: 'auto'
+    'mix-blend-mode': 'multiply'
 
 # showKey()
 #

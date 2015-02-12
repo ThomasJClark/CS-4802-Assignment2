@@ -4,6 +4,9 @@
 # Thomas Clark - CS 4802 Assignment 2
 
 cluster =
+  lowestDistance: 1/0
+  highestDistance: 0
+
   # Perform a bottom-up clustering algorithm by pairing up similar entries
   # two at a time until they form a binary tree.
   bottomUpCluster: (entries) ->
@@ -28,6 +31,11 @@ cluster =
         group: true
         children: [entry1, entry2]
         distance: minNodeDistance
+
+      if minNodeDistance > cluster.highestDistance
+        cluster.highestDistance = minNodeDistance
+      if minNodeDistance < cluster.lowestDistance
+        cluster.lowestDistance = minNodeDistance
 
     # entries should be a binary tree now, so the first (and only) element
     # is the root.

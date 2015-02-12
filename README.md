@@ -21,6 +21,8 @@ The interactive coloring is also a significant technical addition. In addition, 
 ## Running
 This assignment was written in Coffeescript, and a Cakefile is provided to compile it.  Assuming `npm` is installed:
 
+    $ git clone https://github.com/ThomasJClark/CS-4802-Assignment2
+    $ cd CS-4802-Assignment2
     $ sudo npm install -g coffee-script
     $ cake build
 

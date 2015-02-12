@@ -3,7 +3,8 @@
 # Thomas Clark - CS 4802 Assignment 2
 
 treeData = undefined
-colorSpace = d3.interpolateRgb '#C4131F', '#FBD2D4'
+colorSpace = d3.interpolateRgb '#FF3341', '#FBD2D4'
+lineColor = '#B28F92'
 
 svg = (d3.select 'body').append 'svg:svg'
   .attr
@@ -14,8 +15,14 @@ svg = (d3.select 'body').append 'svg:svg'
     display: 'block'
     margin: 'auto'
 
+textAttr =
+  'text-anchor': 'middle'
+  'dominant-baseline': 'hanging'
+  'font-size': '1em'
+  'font-family': '"Helvetica Neue",Helvetica,Arial,sans-serif'
+  'font-weight': 'bold'
 
-# Make a gradient to show the range of colors and stroke widths
+# Make a gradient to show the range of colors
 gradient = (svg.append 'svg:defs').append 'svg:linearGradient'
   .attr 'id', 'gradient'
 gradient.append 'svg:stop'
@@ -27,32 +34,46 @@ gradient.append 'svg:stop'
     offset: '100%'
     'stop-color': colorSpace 0
 
-svg.append 'svg:polygon'
+svg.append 'svg:rect'
   .attr
-    points: '0,5 200,0 200,11 0,6'
+    x1: 0
+    y1: 0
+    width: 200
+    height: 10
     transform: "translate(#{ (svg.attr 'width') / 2 - 100 }, 0)"
   .style
     fill: 'url(#gradient)'
 svg.append 'text'
   .text 'More Mismatches'
+  .attr textAttr
   .attr
     x: (svg.attr 'width') / 2 - 100
     y: 11
-    'text-anchor': 'middle'
-    'dominant-baseline': 'hanging'
-    'font-size': '0.8em'
-    'font-family': '"Helvetica Neue",Helvetica,Arial,sans-serif'
-    'font-weight': 'bold'
 svg.append 'text'
   .text 'Fewer Mismatches'
+  .attr textAttr
   .attr
     x: (svg.attr 'width') / 2 + 100
     y: 11
-    'text-anchor': 'middle'
-    'dominant-baseline': 'hanging'
-    'font-size': '0.8em'
-    'font-family': '"Helvetica Neue",Helvetica,Arial,sans-serif'
-    'font-weight': 'bold'
+
+svg.append 'svg:polygon'
+  .attr
+    points: '0,5 200,0 200,11 0,6'
+    transform: "translate(#{ (svg.attr 'width') / 2 - 100 }, 40)"
+  .style
+    fill: lineColor
+svg.append 'text'
+  .text 'Weak Cluster'
+  .attr textAttr
+  .attr
+    x: (svg.attr 'width') / 2 - 100
+    y: 51
+svg.append 'text'
+  .text 'Strong Cluster'
+  .attr textAttr
+  .attr
+    x: (svg.attr 'width') / 2 + 100
+    y: 51
 
 tree = d3.layout.tree()
   .size [360, 700]
@@ -61,7 +82,7 @@ tree = d3.layout.tree()
   .separation (a, b) -> 2 / a.depth
 
 treeGroup = svg.append 'g'
-  .attr 'transform', 'translate(640, 40)'
+  .attr 'transform', 'translate(640, 70)'
 
 diagonal = d3.svg.diagonal.radial()
   .projection (d) -> [d.y, (d.x + 180) / 180 * Math.PI / 2]
@@ -91,7 +112,7 @@ render = () ->
       d: diagonal
     .style
       fill: 'none'
-      stroke: (d, i) -> colorSpace colorRange d.source.distance
+      stroke: (d, i) -> lineColor
       'stroke-width': (d, i) -> strokeRange d.source.distance
 
   node = treeGroup.selectAll 'g.node'
@@ -113,17 +134,26 @@ render = () ->
       'dominant-baseline': 'central'
     .style
       fill: 'Black'
-      'font-size': '0.8em'
+      'font-size': '1em'
       'font-family': '"Helvetica Neue",Helvetica,Arial,sans-serif'
+    .on 'mouseover', (d) ->
+      activeData = this.__data__
+      d3.selectAll 'rect.text-background'
+        .transition()
+          .style 'fill', (d) -> colorSpace colorRange cluster.distance activeData, d
+          .style 'stroke', (d) -> colorSpace colorRange cluster.distance activeData, d
 
   textGroup.each (d, i) ->
     bbox = this.children[0].getBBox()
     (d3.select this).insert 'rect', ':first-child'
       .attr bbox
-      .attr 'rx', 4
+      .attr
+        rx: 4
+        class: 'text-background'
       .style
         fill: 'White'
         stroke: 'White'
+        'stroke-width': 2
 
 d3.csv 'zoo.csv',
   (error, animals) ->

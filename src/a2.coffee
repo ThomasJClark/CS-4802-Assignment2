@@ -58,6 +58,7 @@ tree = d3.layout.tree()
   .size [360, 700]
   .value (d) -> d.animalname
   .children (d) -> d.children
+  .separation (a, b) -> 2 / a.depth
 
 treeGroup = svg.append 'g'
   .attr 'transform', 'translate(640, 40)'
